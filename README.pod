@@ -11,6 +11,8 @@ Load modules directly from the Github API over http. Fuck it.
 
 =head3 Synopsis
 
+    BEGIN %*ENV<GITHUB_ACCESS_TOKEN> = "..."; # optional, but useful due to api rate limiting
+
     use CompUnit::Repository::Github;
     use lib "CompUnit::Repository::Github#user<ugexe>#repo<Perl6-PathTools>#branch<master>#/";
 
