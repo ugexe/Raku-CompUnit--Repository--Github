@@ -3,7 +3,7 @@
     "perl"         : "6.c",
     "name"         : "CompUnit::Repository::Github",
     "api"          : "0",
-    "version"      : "0.0.1",
+    "version"      : "0.0.2",
     "auth"         : "github:ugexe",
     "authors"      : ["ugexe"],
     "license"       : "Artistic-2.0",

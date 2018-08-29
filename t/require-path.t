@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 2;
+plan 1;
 
 use CompUnit::Repository::Github;
 use lib "CompUnit::Repository::Github#user<ugexe>#repo<zef>#branch<master>#/";
@@ -9,18 +9,11 @@ use lib "CompUnit::Repository::Github#user<ugexe>#repo<zef>#branch<master>#/";
 subtest 'require module with no external dependencies' => {
     {
         dies-ok { ::("Zef") };
+        lives-ok { require 'lib/Zef.pm6' <&from-json>; }, 'module require-d ok';
     }
     {
-        use-ok("Zef"), 'module use-d ok';
-    }
-}
-
-subtest 'require modules with external dependency chain' => {
-    {
-        dies-ok { ::("Zef::Build") };
-    }
-    {
-        use-ok("Zef::Build"), 'module use-d ok';
+        require 'lib/Zef/Utils/FileSystem.pm6' <&list-paths>;
+        ok &list-paths($*CWD).elems;
     }
 }
 

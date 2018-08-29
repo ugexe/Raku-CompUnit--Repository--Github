@@ -162,6 +162,46 @@ class CompUnit::Repository::Github does CompUnit::Repository {
         X::CompUnit::UnsatisfiedDependency.new(:specification($spec)).throw;
     }
 
+    method load(Str(Cool) $name-path) returns CompUnit:D {
+        my sub parse-value($str-or-kv) {
+            do given $str-or-kv {
+                when Str  { $_ }
+                when Hash { $_.keys[0] }
+                when Pair { $_.key     }
+            }
+        }
+        my sub path2name { state %path2name = self.installed.head.meta<provides>.map({ parse-value(.value) => .key }) }
+        my sub name2path { state %name2path = self.installed.head.meta<provides>.map({ .key => parse-value(.value) }) }
+
+        my $name = path2name{$name-path} // (name2path(){$name-path} ?? $name-path !! Nil);
+        my $path = name2path{$name-path} // (path2name(){$name-path} ?? $name-path !! Nil);
+
+        if $path {
+            return %!loaded{~$name-path} if %!loaded{~$name-path}:exists;
+
+            with self.installed.head {
+                my $bytes  = Blob.new( $_.content($_.meta<provides>{$name}).open(:bin).slurp-rest(:bin) );
+                my $handle = CompUnit::Loader.load-source( $bytes );
+
+                my $compunit = CompUnit.new(
+                    handle       => $handle,
+                    short-name   => $name,
+                    version      => Version.new($_.meta<ver> // 0),
+                    auth         => ($_.meta<auth> // Str),
+                    repo         => self,
+                    repo-id      => self.id,
+                    precompiled  => False,
+                    distribution => $_,
+                );
+
+                return %!loaded{~$name-path} //= $compunit;
+            }
+        }
+
+        return self.next-repo.load($name-path.IO) if self.next-repo;
+        die("Could not find $name-path in:\n" ~ $*REPO.repo-chain.map(*.Str).join("\n").indent(4));
+    }
+
     method resolve(CompUnit::DependencySpecification $spec --> CompUnit:D) {
         with self!matching-dist($spec) {
             return CompUnit.new(
