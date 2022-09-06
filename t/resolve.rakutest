@@ -2,7 +2,7 @@ use Test:ver<6.c+>;
 plan 2;
 
 use CompUnit::Repository::Github;
-use lib "CompUnit::Repository::Github#user<ugexe>#repo<zef>#branch<master>#/";
+use lib "CompUnit::Repository::Github#user<ugexe>#repo<zef>#branch<main>#/";
 
 
 my $matching-spec = CompUnit::DependencySpecification.new(

@@ -2,16 +2,13 @@ use Test:ver<6.c+>;
 plan 1;
 
 use CompUnit::Repository::Github;
-use lib "CompUnit::Repository::Github#user<ugexe>#repo<zef>#branch<master>#/";
+use lib "CompUnit::Repository::Github#user<ugexe>#repo<zef>#branch<main>#/";
 
 
 subtest 'require module with no external dependencies' => {
-    {
-        dies-ok { ::("Zef") };
-        lives-ok { require 'lib/Zef.pm6' <&from-json>; }, 'module require-d ok';
-    }
-    {
-        require 'lib/Zef/Utils/FileSystem.pm6' <&list-paths>;
+    dies-ok { ::("Zef::Utils::FileSystem") };
+    lives-ok {
+        require 'lib/Zef/Utils/FileSystem.rakumod' <&list-paths>;
         ok &list-paths($*CWD).elems;
     }
 }
