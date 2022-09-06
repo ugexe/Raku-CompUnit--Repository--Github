@@ -11,7 +11,7 @@
         "CompUnit::Repository::Github" : "lib/CompUnit/Repository/Github.rakumod"
     },
     "build-depends" : [ ],
-    "test-depends"  : [ "Test" ],
+    "test-depends"  : [ "Test:ver<6.c+>" ],
     "depends"       : [ "Distribution::Common::Remote" ],
     "support"       : {
         "bugtracker" : "https://github.com/ugexe/Raku-CompUnit--Repository--Github/issues",
