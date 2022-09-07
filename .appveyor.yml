@@ -28,9 +28,10 @@ install:
     - SET PATH=%APPVEYOR_BUILD_FOLDER%\..\rakudo\install\share\perl6\site\bin;%PATH%
 
     # Install dependencies
+    # Disable testing due to path length errors from precompiling Distribution::Common::Remote via CURFS when running tests
     - cd %APPVEYOR_BUILD_FOLDER%
     - git clone https://github.com/ugexe/zef %APPVEYOR_BUILD_FOLDER%\..\zef
-    - raku -I %APPVEYOR_BUILD_FOLDER%\..\zef %APPVEYOR_BUILD_FOLDER%\..\zef\bin\zef --deps-only install .
+    - raku -I %APPVEYOR_BUILD_FOLDER%\..\zef %APPVEYOR_BUILD_FOLDER%\..\zef\bin\zef --deps-only --/test install .
 
     - cd %APPVEYOR_BUILD_FOLDER%
 
